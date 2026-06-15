@@ -85,20 +85,15 @@
 const header = document.getElementById('header');
 window.addEventListener('scroll',()=>{
   header.classList.toggle('scrolled', window.scrollY>50);
-  const scrollBtn = document.getElementById('scrollTop');
-  if(scrollBtn) scrollBtn.classList.toggle('show', window.scrollY>400);
+  document.getElementById('scrollTop').classList.toggle('show', window.scrollY>400);
 });
 
 // ─── HAMBURGER ─────────────────────────────────────────
-const hamburger = document.getElementById('hamburger');
-const navLinks = document.getElementById('navLinks');
-if(hamburger && navLinks){
-  hamburger.addEventListener('click',function(){
-    navLinks.classList.toggle('open');
-    this.querySelector('i').className = navLinks.classList.contains('open')
-      ? 'fas fa-times' : 'fas fa-bars';
-  });
-}
+document.getElementById('hamburger').addEventListener('click',function(){
+  document.getElementById('navLinks').classList.toggle('open');
+  this.querySelector('i').className = document.getElementById('navLinks').classList.contains('open')
+    ? 'fas fa-times' : 'fas fa-bars';
+});
 
 // ─── NAV SMOOTH + ACTIVE ───────────────────────────────
 document.querySelectorAll('a[href^="#"]').forEach(a=>{
@@ -106,8 +101,8 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     e.preventDefault();
     const t=document.querySelector(a.getAttribute('href'));
     if(t) window.scrollTo({top:t.offsetTop-72,behavior:'smooth'});
-    if(navLinks) navLinks.classList.remove('open');
-    if(hamburger) hamburger.querySelector('i').className='fas fa-bars';
+    document.getElementById('navLinks').classList.remove('open');
+    document.getElementById('hamburger').querySelector('i').className='fas fa-bars';
   });
 });
 const sections=document.querySelectorAll('section[id]');
@@ -120,10 +115,7 @@ window.addEventListener('scroll',()=>{
 });
 
 // ─── SCROLL-TOP ────────────────────────────────────────
-const scrollTopBtn = document.getElementById('scrollTop');
-if(scrollTopBtn){
-  scrollTopBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
-}
+document.getElementById('scrollTop').addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
 
 // ─── REVEAL ON SCROLL ──────────────────────────────────
 const ro=new IntersectionObserver((entries)=>{
@@ -131,7 +123,7 @@ const ro=new IntersectionObserver((entries)=>{
     if(e.isIntersecting){
       setTimeout(()=>e.target.classList.add('visible'), i*80);
       e.target.querySelectorAll('.skill-bar-fill').forEach(b=>{
-        if(b.dataset.w) b.style.width=b.dataset.w+'%';
+        b.style.width=b.dataset.w+'%';
       });
     }
   });
@@ -144,13 +136,11 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     this.classList.add('active');
     const id=this.dataset.tab;
-    const techGrid = document.getElementById('tab-tech');
-    const softGrid = document.getElementById('tab-soft');
-    if(techGrid) techGrid.style.display=id==='tech'?'grid':'none';
-    if(softGrid) softGrid.style.display=id==='soft'?'grid':'none';
+    document.getElementById('tab-tech').style.display=id==='tech'?'grid':'none';
+    document.getElementById('tab-soft').style.display=id==='soft'?'grid':'none';
     setTimeout(()=>{
       document.querySelectorAll('#tab-'+id+' .skill-bar-fill').forEach(b=>{
-        if(b.dataset.w) b.style.width=b.dataset.w+'%';
+        b.style.width=b.dataset.w+'%';
       });
     },50);
   });
@@ -159,32 +149,26 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
 // ─── EMAILJS CONFIGURATION ─────────────────────────────
 // IMPORTANT: Replace these keys with your own from EmailJS
 const EMAILJS_PUBLIC_KEY  = 'ZkusTjuMM-TjTuvP6';
-const EMAILJS_SERVICE_ID  = 'service_abc123';
+const EMAILJS_SERVICE_ID  = 'service_vg7pcu3';
 const EMAILJS_TEMPLATE_ID = 'template_j7e7pkd';
 
-// Initialize EmailJS with proper public key
-if(typeof emailjs !== 'undefined'){
-  emailjs.init(EMAILJS_PUBLIC_KEY);
-}
+emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
 // ─── TOAST SYSTEM ──────────────────────────────────────
 function showToast(type, title, message, duration=5000){
-  const container = document.getElementById('toastContainer');
-  if(!container) return null;
-  
   const icons = {
-    success:'<i class="fas fa-check-circle"></i>',
+    success:'<i class="fas fa-check"></i>',
     error:'<i class="fas fa-exclamation-triangle"></i>',
     loading:'<div class="spinner"></div>'
   };
   const toast=document.createElement('div');
   toast.className=`toast toast-${type}`;
   toast.innerHTML=`
-    <div class="toast-icon">${icons[type] || icons.error}</div>
+    <div class="toast-icon">${icons[type]}</div>
     <div class="toast-body"><h4>${title}</h4><p>${message}</p></div>
     ${type!=='loading'?'<button class="toast-close" onclick="removeToast(this.closest(\'.toast\'))"><i class="fas fa-times"></i></button>':''}
   `;
-  container.appendChild(toast);
+  document.getElementById('toastContainer').appendChild(toast);
   requestAnimationFrame(()=>{ requestAnimationFrame(()=>toast.classList.add('show')); });
   if(duration && type!=='loading') setTimeout(()=>removeToast(toast), duration);
   return toast;
@@ -196,49 +180,44 @@ window.removeToast = function(toast){
 };
 
 // ─── CONTACT FORM SUBMIT ───────────────────────────────
-const contactForm = document.getElementById('contactForm');
-if(contactForm){
-  contactForm.addEventListener('submit', async function(e){
-    e.preventDefault();
-    const btn = document.getElementById('submitBtn');
-    const form = this;
-    const replyToField = document.getElementById('reply_to_field');
-    if(replyToField) replyToField.value = document.getElementById('email').value;
+document.getElementById('contactForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  const form = this;
 
-    // Check if EmailJS keys are still placeholders or emailjs is not available
-    if(typeof emailjs === 'undefined' || EMAILJS_PUBLIC_KEY === 'ZkusTjuMM-TjTuvP6' || EMAILJS_SERVICE_ID === 'service_abc123'){
-      showToast('error','Setup Required',
-        'Please add your EmailJS keys to script.js. See the setup guide.',6000);
-      // Show setup banner if it exists
-      const setupBanner = document.getElementById('setup-banner');
-      if(setupBanner) setupBanner.style.display='flex';
-      return;
-    }
+  document.getElementById('reply_to_field').value = document.getElementById('email').value;
 
-    btn.classList.add('btn-sending');
-    btn.innerHTML='<div class="spinner" style="width:16px;height:16px;border-width:2px;margin-right:6px;display:inline-block;"></div> Sending…';
-    const loadingToast = showToast('loading','Sending your message…','Please wait a moment.');
+  // Check if EmailJS keys are still placeholders
+  if(EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY' || EMAILJS_SERVICE_ID === 'service_abc123'){
+    showToast('error','Setup Required',
+      'Please add your EmailJS keys to script.js. See the setup guide below.',6000);
+    document.getElementById('setup-banner').style.display='flex';
+    return;
+  }
 
-    try {
-      await emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form);
-      if(loadingToast) window.removeToast(loadingToast);
-      showToast('success','Message Sent! 🎉',
-        `Thanks for reaching out! Ujjawal will reply to ${document.getElementById('email').value} soon.`,7000);
-      btn.innerHTML='<i class="fas fa-check"></i> Message Sent!';
-      btn.style.background='linear-gradient(135deg,#22c55e,#16a34a)';
-      form.reset();
-      setTimeout(()=>{
-        btn.innerHTML='<i class="fas fa-paper-plane"></i> Send Message';
-        btn.style.background='';
-        btn.classList.remove('btn-sending');
-      },4000);
-    } catch(err){
-      if(loadingToast) window.removeToast(loadingToast);
-      showToast('error','Failed to Send',
-        'Something went wrong. Please email directly at ujjusingh099@gmail.com',8000);
+  btn.classList.add('btn-sending');
+  btn.innerHTML='<div class="spinner" style="width:16px;height:16px;border-width:2px;margin-right:6px;display:inline-block;"></div> Sending…';
+  const loadingToast = showToast('loading','Sending your message…','Please wait a moment.');
+
+  try {
+    await emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form);
+    window.removeToast(loadingToast);
+    showToast('success','Message Sent! 🎉',
+      `Thanks for reaching out! Ujjawal will reply to ${document.getElementById('email').value} soon.`,7000);
+    btn.innerHTML='<i class="fas fa-check"></i> Message Sent!';
+    btn.style.background='linear-gradient(135deg,#22c55e,#16a34a)';
+    form.reset();
+    setTimeout(()=>{
       btn.innerHTML='<i class="fas fa-paper-plane"></i> Send Message';
+      btn.style.background='';
       btn.classList.remove('btn-sending');
-      console.error('EmailJS error:',err);
-    }
-  });
-}
+    },4000);
+  } catch(err){
+    window.removeToast(loadingToast);
+    showToast('error','Failed to Send',
+      'Something went wrong. Please email directly at ujjusingh099@gmail.com',8000);
+    btn.innerHTML='<i class="fas fa-paper-plane"></i> Send Message';
+    btn.classList.remove('btn-sending');
+    console.error('EmailJS error:',err);
+  }
+});
