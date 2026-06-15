@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ujjawal Singh | Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+
+<canvas id="hero-canvas"></canvas>
+
+<header id="header">
+  <div class="container">
+    <nav>
+      <div class="logo">U.S.</div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section id="home">
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow"><span></span> Available for Internships & Opportunities</div>
+        <h1 class="hero-name">Hi, I'm<br><span class="gradient-text">Ujjawal Singh</span></h1>
+        <p class="hero-role" id="typewriter"></p>
+        <p class="hero-desc">Third-year CSE student at Brainware University passionate about building innovative software and solving real-world problems through clean, efficient code.</p>
+        <div class="hero-btns">
+          <a href="#projects" class="btn btn-primary"><i class="fas fa-rocket"></i> View My Work</a>
+          <a href="#contact" class="btn btn-outline"><i class="fas fa-paper-plane"></i> Let's Talk</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-chip"><div class="num">3.8</div><div class="lbl">GPA</div></div>
+          <div class="stat-chip"><div class="num">3+</div><div class="lbl">Projects</div></div>
+          <div class="stat-chip"><div class="num">1+</div><div class="lbl">Internships</div></div>
+          <div class="stat-chip"><div class="num">6+</div><div class="lbl">Languages</div></div>
+        </div>
+      </div>
+      <div class="hero-avatar-wrap">
+        <div class="avatar-ring">
+          <img src="profile.jpeg" alt="Ujjawal Singh" class="avatar-img" onerror="this.style.display='none'; document.getElementById('avatar-ph').style.display='flex';">
+          <div class="avatar-placeholder" id="avatar-ph" style="display:none;"><i class="fas fa-user"></i></div>
+          <div class="badge badge-1"><i class="fas fa-code"></i> Full-Stack Dev</div>
+          <div class="badge badge-2"><i class="fas fa-graduation-cap"></i> B.Sc CS • 3.8 GPA</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about">
+  <div class="container">
+    <span class="section-label reveal">Who I Am</span>
+    <h2 class="section-title reveal">About <span>Me</span></h2>
+    <div class="section-divider reveal"></div>
+    <div class="about-grid">
+      <div class="glass about-card reveal">
+        <div class="about-card-avatar-ph">🧑‍💻</div>
+        <h3>Ujjawal Singh</h3>
+        <p>CSE Student & Developer</p>
+        <div class="info-row"><i class="fas fa-map-marker-alt"></i> Barasat, West Bengal, India</div>
+        <div class="info-row"><i class="fas fa-envelope"></i> ujjusingh099@gmail.com</div>
+        <div class="info-row"><i class="fas fa-phone"></i> +91 8100517052</div>
+        <div class="info-row"><i class="fas fa-university"></i> Brainware University</div>
+        <br>
+        <a href="#contact" class="btn btn-primary" style="width:100%;justify-content:center;">Hire Me</a>
+      </div>
+      <div class="about-text reveal">
+        <h3>Hello! I'm <span style="background:var(--grad);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Ujjawal Singh</span></h3>
+        <p>I'm a third-year Computer Science student at Brainware University with a passion for software development and problem-solving. I'm currently seeking internship opportunities to apply my skills in a professional environment and contribute to innovative projects.</p>
+        <div class="edu-block">
+          <h4><i class="fas fa-graduation-cap" style="margin-right:.4rem;"></i>Brainware University</h4>
+          <p>Bachelor of Science in Computer Science</p>
+          <p class="edu-gpa">Expected Graduation: May 2025 &nbsp;|&nbsp; GPA: 3.8 / 4.0</p>
+        </div>
+        <div class="edu-block">
+          <h4><i class="fas fa-book-open" style="margin-right:.4rem;"></i>Relevant Coursework</h4>
+          <p>Data Structures & Algorithms · OOP · Database Systems · Web Development · ML · Networks</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Skills Section -->
+<section id="skills">
+  <div class="container">
+    <span class="section-label reveal">What I Know</span>
+    <h2 class="section-title reveal">My <span>Skills</span></h2>
+    <div class="section-divider reveal"></div>
+    <div class="skills-tabs reveal">
+      <button class="tab-btn active" data-tab="tech">Technical</button>
+      <button class="tab-btn" data-tab="soft">Professional</button>
+    </div>
+    <div class="skills-grid" id="tab-tech">
+      <div class="skill-card glass reveal">
+        <div class="skill-icon" style="background:rgba(255,212,0,.1);color:#ffd400;"><i class="fab fa-python"></i></div>
+        <div class="skill-name">Python</div>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" data-w="90"></div></div>
+        <div class="skill-pct">90%</div>
+      </div>
+      <div class="skill-card glass reveal">
+        <div class="skill-icon" style="background:rgba(239,68,68,.1);color:#ef4444;"><i class="fab fa-java"></i></div>
+        <div class="skill-name">Java</div>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" data-w="85"></div></div>
+        <div class="skill-pct">85%</div>
+      </div>
+      <div class="skill-card glass reveal">
+        <div class="skill-icon" style="background:rgba(234,179,8,.1);color:#eab308;"><i class="fab fa-js"></i></div>
+        <div class="skill-name">JavaScript</div>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" data-w="80"></div></div>
+        <div class="skill-pct">80%</div>
+      </div>
+      <div class="skill-card glass reveal">
+        <div class="skill-icon" style="background:rgba(249,115,22,.1);color:#f97316;"><i class="fab fa-html5"></i></div>
+        <div class="skill-name">HTML / CSS</div>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" data-w="85"></div></div>
+        <div class="skill-pct">85%</div>
+      </div>
+      <div class="skill-card glass reveal">
+        <div class="skill-icon" style="background:rgba(6,182,212,.1);color:#06b6d4;"><i class="fab fa-react"></i></div>
+        <div class="skill-name">React</div>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" data-w="75"></div></div>
+        <div class="skill-pct">75%</div>
+      </div>
+      <div class="skill-card glass reveal">
+        <div class="skill-icon" style="background:rgba(79,142,247,.1);color:#4f8ef7;"><i class="fas fa-database"></i></div>
+        <div class="skill-name">SQL</div>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" data-w="80"></div></div>
+        <div class="skill-pct">80%</div>
+      </div>
+    </div>
+    <div class="skills-grid" id="tab-soft" style="display:none;">
+      <div class="skill-card glass reveal">
+        <div class="skill-icon" style="background:rgba(0,212,255,.1);color:var(--cyan);"><i class="fas fa-brain"></i></div>
+        <div class="skill-name">Problem Solving</div>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" data-w="90"></div></div>
+        <div class="skill-pct">90%</div>
+      </div>
+      <div class="skill-card glass reveal">
+        <div class="skill-icon" style="background:rgba(139,92,246,.1);color:#8b5cf6;"><i class="fas fa-users"></i></div>
+        <div class="skill-name">Team Collaboration</div>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" data-w="85"></div></div>
+        <div class="skill-pct">85%</div>
+      </div>
+      <div class="skill-card glass reveal">
+        <div class="skill-icon" style="background:rgba(34,197,94,.1);color:#22c55e;"><i class="fas fa-comments"></i></div>
+        <div class="skill-name">Communication</div>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" data-w="80"></div></div>
+        <div class="skill-pct">80%</div>
+      </div>
+      <div class="skill-card glass reveal">
+        <div class="skill-icon" style="background:rgba(249,115,22,.1);color:#f97316;"><i class="fas fa-tasks"></i></div>
+        <div class="skill-name">Project Management</div>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" data-w="75"></div></div>
+        <div class="skill-pct">75%</div>
+      </div>
+      <div class="skill-card glass reveal">
+        <div class="skill-icon" style="background:rgba(79,142,247,.1);color:var(--blue);"><i class="fas fa-sync-alt"></i></div>
+        <div class="skill-name">Agile Methodology</div>
+        <div class="skill-bar-wrap"><div class="skill-bar-fill" data-w="70"></div></div>
+        <div class="skill-pct">70%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects Section -->
+<section id="projects">
+  <div class="container">
+    <span class="section-label reveal">What I've Built</span>
+    <h2 class="section-title reveal">My <span>Projects</span></h2>
+    <div class="section-divider reveal"></div>
+    <div class="projects-grid">
+      <div class="project-card glass reveal">
+        <div class="project-thumb">
+          <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=700&q=80" alt="Task Management App" />
+          <div class="project-overlay"></div>
+          <span class="project-cat">Web App</span>
+        </div>
+        <div class="project-body">
+          <h3>Task Management App</h3>
+          <p>A web application for managing personal tasks and projects with drag-and-drop functionality and deadline reminders.</p>
+          <div class="tags"><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">MongoDB</span></div>
+          <a href="#" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="project-card glass reveal">
+        <div class="project-thumb">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=700&q=80" alt="E-commerce Platform" />
+          <div class="project-overlay"></div>
+          <span class="project-cat">Full-Stack</span>
+        </div>
+        <div class="project-body">
+          <h3>E-commerce Platform</h3>
+          <p>Full-stack e-commerce website with user authentication, product catalog, and payment integration.</p>
+          <div class="tags"><span class="tag">JavaScript</span><span class="tag">Express</span><span class="tag">MySQL</span></div>
+          <a href="#" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="project-card glass reveal">
+        <div class="project-thumb">
+          <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&w=700&q=80" alt="Data Visualization Tool" />
+          <div class="project-overlay"></div>
+          <span class="project-cat">Data Science</span>
+        </div>
+        <div class="project-body">
+          <h3>Data Visualization Tool</h3>
+          <p>Interactive dashboard for visualizing and analyzing datasets with chart types and filtering options.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag">D3.js</span><span class="tag">Flask</span></div>
+          <a href="#" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Experience Section -->
+<section id="experience">
+  <div class="container">
+    <span class="section-label reveal">My Journey</span>
+    <h2 class="section-title reveal">Work <span>Experience</span></h2>
+    <div class="section-divider reveal"></div>
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-card glass">
+          <h3>Software Development Intern</h3>
+          <div class="tl-meta">
+            <span><i class="fas fa-building"></i> TechSolutions Inc.</span>
+            <span><i class="fas fa-map-marker-alt"></i> San Francisco, CA</span>
+            <span><i class="fas fa-calendar"></i> Jun 2023 – Aug 2023</span>
+          </div>
+          <ul><li>Developed and maintained web applications using React and Node.js</li><li>Collaborated with senior developers to implement new features</li><li>Participated in agile development processes and code reviews</li></ul>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-card glass">
+          <h3>IT Support Assistant</h3>
+          <div class="tl-meta">
+            <span><i class="fas fa-building"></i> Stanford University IT Dept.</span>
+            <span><i class="fas fa-map-marker-alt"></i> Stanford, CA</span>
+            <span><i class="fas fa-calendar"></i> Sep 2022 – May 2023</span>
+          </div>
+          <ul><li>Provided technical support to students and faculty</li><li>Assisted with network troubleshooting and system maintenance</li><li>Developed documentation for common technical issues</li></ul>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-card glass">
+          <h3>Freelance Web Developer</h3>
+          <div class="tl-meta">
+            <span><i class="fas fa-briefcase"></i> Self-Employed</span>
+            <span><i class="fas fa-calendar"></i> Jan 2022 – Present</span>
+          </div>
+          <ul><li>Designed and developed websites for small businesses</li><li>Implemented responsive designs and SEO best practices</li><li>Managed client relationships and project timelines</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact">
+  <div class="container">
+    <span class="section-label reveal">Get In Touch</span>
+    <h2 class="section-title reveal">Let's <span>Connect</span></h2>
+    <div class="section-divider reveal"></div>
+    <div class="contact-grid">
+      <div class="reveal">
+        <h3>Have a project in mind?<br>Let's build it together.</h3>
+        <p>Whether you're looking for a passionate intern, a collaborator on a side project, or just want to say hello — my inbox is always open.</p>
+        <div class="c-item"><div class="c-icon"><i class="fas fa-envelope"></i></div><div><h4>Email</h4><p>ujjusingh099@gmail.com</p></div></div>
+        <div class="c-item"><div class="c-icon"><i class="fas fa-phone"></i></div><div><h4>Phone</h4><p>+91 8100517052</p></div></div>
+        <div class="c-item"><div class="c-icon"><i class="fas fa-map-marker-alt"></i></div><div><h4>Location</h4><p>Barasat, West Bengal, India</p></div></div>
+        <div class="social-row">
+          <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-btn"><i class="fab fa-github"></i></a>
+          <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+      <div class="glass contact-form reveal">
+        <form id="contactForm">
+          <input type="hidden" name="to_email" value="ujjusingh099@gmail.com" />
+          <input type="hidden" name="reply_to" id="reply_to_field" />
+          <div class="form-row">
+            <div class="form-group"><label for="name">Your Name</label><input type="text" id="name" name="from_name" class="form-control" placeholder="John Doe" required /></div>
+            <div class="form-group"><label for="email">Your Email</label><input type="email" id="email" name="from_email" class="form-control" placeholder="john@example.com" required /></div>
+          </div>
+          <div class="form-group"><label for="subject">Subject</label><input type="text" id="subject" name="subject" class="form-control" placeholder="Internship Opportunity" required /></div>
+          <div class="form-group"><label for="message">Message</label><textarea id="message" name="message" class="form-control" placeholder="Hey Ujjawal, I'd like to…" required></textarea></div>
+          <button type="submit" id="submitBtn" class="btn btn-primary form-submit"><i class="fas fa-paper-plane"></i> Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="f-logo">Ujjawal Singh</div>
+    <p>Computer Science Student · Software Developer · Problem Solver</p>
+    <p style="margin-top:.5rem;">&copy; 2026 Ujjawal Singh · All rights reserved.</p>
+  </div>
+</footer>
+
+<button id="scrollTop" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></button>
+<div class="toast-container" id="toastContainer"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
