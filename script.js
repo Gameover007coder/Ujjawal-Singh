@@ -152,7 +152,7 @@ const EMAILJS_PUBLIC_KEY  = 'ZkusTjuMM-TjTuvP6';
 const EMAILJS_SERVICE_ID  = 'service_abc123';
 const EMAILJS_TEMPLATE_ID = '__ejs-test-mail-service__';
 
-emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+emailjs.init({ publicKey: ZkusTjuMM-TjTuvP6 });
 
 // ─── TOAST SYSTEM ──────────────────────────────────────
 function showToast(type, title, message, duration=5000){
