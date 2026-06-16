@@ -150,7 +150,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
 // IMPORTANT: Replace these keys with your own from EmailJS
 const EMAILJS_PUBLIC_KEY  = 'ZkusTjuMM-TjTuvP6';
 const EMAILJS_SERVICE_ID  = 'service_vg7pcu3';
-const EMAILJS_TEMPLATE_ID = 'template_j7e7pkd';
+const EMAILJS_TEMPLATE_ID = 'template_i5ml5oj';
 
 emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
