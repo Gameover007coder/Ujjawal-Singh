@@ -617,7 +617,17 @@ footer p { font-size:.82rem; color:var(--muted); }
 
 /* ─── MOBILE MENU ────────────────────────────────────── */
 @media (max-width: 900px) {
-  .hero-inner { grid-template-columns:1fr; text-align:center; }
+  .hero-inner { 
+    grid-template-columns: 1fr; 
+    text-align: center;
+    gap: 40px;
+  }
+  .hero-inner > div:first-child {
+    order: 2;
+  }
+  .hero-inner > div:last-child {
+    order: 1;
+  }
   .hero-desc { margin:0 auto 2.2rem; }
   .hero-btns { justify-content:center; }
   .hero-stats { justify-content:center; }
