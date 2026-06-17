@@ -433,9 +433,14 @@ nav {
   position: relative;
   height: 200px;
   overflow: hidden;
+  background: var(--surface);
+  width: 100%;
 }
 .project-thumb img {
-  width:100%; height:100%; object-fit:cover;
+  width:100%; 
+  height:100%; 
+  object-fit:cover;
+  display: block;
   transition: transform .5s;
 }
 .project-card:hover .project-thumb img { transform: scale(1.08); }
@@ -620,7 +625,17 @@ footer p { font-size:.82rem; color:var(--muted); }
   .about-grid { grid-template-columns:1fr; }
   .contact-grid { grid-template-columns:1fr; }
   .form-row { grid-template-columns:1fr; }
+  
+  /* Mobile optimized project grid */
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .project-thumb {
+    height: 250px;
+  }
 }
+
 @media (max-width:768px) {
   .nav-links {
     position:fixed; top:72px; right:-100%;
@@ -637,7 +652,75 @@ footer p { font-size:.82rem; color:var(--muted); }
   }
   .nav-links.open { right:0; }
   .hamburger { display:block; }
+  
+  /* Mobile specific image fixes */
+  .project-thumb {
+    height: 280px;
+    max-width: 100%;
+  }
+  
+  .project-thumb img {
+    max-width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .project-card {
+    width: 100%;
+  }
 }
+
+@media (max-width: 480px) {
+  section { padding: 60px 0; }
+  
+  .container { width: 95%; }
+  
+  /* Extra small mobile optimizations */
+  .project-thumb {
+    height: 220px;
+  }
+  
+  .project-body {
+    padding: 16px;
+  }
+  
+  .project-body h3 {
+    font-size: 0.95rem;
+  }
+  
+  .project-body p {
+    font-size: 0.8rem;
+  }
+  
+  .tags {
+    gap: 6px;
+  }
+  
+  .tag {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.5rem;
+  }
+  
+  .btn {
+    padding: 0.6rem 1.4rem;
+    font-size: 0.85rem;
+  }
+  
+  .hero-name {
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+  }
+  
+  .section-title {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+  }
+}
+
 @media (prefers-reduced-motion:reduce) {
   *, *::before, *::after { animation:none !important; transition:none !important; }
 }
