@@ -621,7 +621,10 @@ footer p { font-size:.82rem; color:var(--muted); }
   .hero-desc { margin:0 auto 2.2rem; }
   .hero-btns { justify-content:center; }
   .hero-stats { justify-content:center; }
-  .hero-avatar-wrap { display:none; }
+  /* keep avatar visible on mobile */
+  .hero-avatar-wrap { display:flex; justify-content:center; }
+  .avatar-ring { width: 220px; height: 220px; }
+  .avatar-placeholder { font-size: 3rem; }
   .about-grid { grid-template-columns:1fr; }
   .contact-grid { grid-template-columns:1fr; }
   .form-row { grid-template-columns:1fr; }
@@ -674,6 +677,10 @@ footer p { font-size:.82rem; color:var(--muted); }
   .project-card {
     width: 100%;
   }
+  
+  /* make avatar slightly smaller on narrower screens */
+  .avatar-ring { width: 200px; height: 200px; }
+  .avatar-placeholder { font-size: 2.5rem; }
 }
 
 @media (max-width: 480px) {
@@ -719,6 +726,11 @@ footer p { font-size:.82rem; color:var(--muted); }
   .section-title {
     font-size: clamp(1.5rem, 3vw, 2.2rem);
   }
+  
+  /* extra-small avatar adjustments */
+  .avatar-ring { width: 160px; height: 160px; }
+  .avatar-placeholder { font-size: 2rem; }
+  .avatar-img { border-width: 2px; }
 }
 
 @media (prefers-reduced-motion:reduce) {
