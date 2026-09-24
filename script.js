@@ -1,224 +1,432 @@
-// ─── PARTICLE CANVAS ───────────────────────────────────
-(function(){
-  const canvas = document.getElementById('hero-canvas');
-  const ctx = canvas.getContext('2d');
-  let W, H, particles=[], mouse={x:null,y:null};
+/* ==========================================================
+   Ujjawal Singh portfolio
+   Theme, navigation, project index, GitHub data, contact form
+   ========================================================== */
+(function () {
+  'use strict';
 
-  function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
-  resize();
-  window.addEventListener('resize', resize);
-  window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+  var GITHUB_USER = 'Gameover007coder';
 
-  const N=80;
-  for(let i=0;i<N;i++) particles.push({
-    x: Math.random()*W, y: Math.random()*H,
-    vx: (Math.random()-.5)*.4, vy:(Math.random()-.5)*.4,
-    r: Math.random()*2+.5,
-    alpha: Math.random()*.6+.2
-  });
+  // EmailJS (public keys, safe to ship in the browser)
+  var EMAILJS_PUBLIC_KEY = 'ZkusTjuMM-TjTuvP6';
+  var EMAILJS_SERVICE_ID = 'service_vg7pcu3';
+  var EMAILJS_TEMPLATE_ID = 'template_i5ml5oj';
+  var CONTACT_EMAIL = 'ujjusingh099@gmail.com';
 
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    const C1='rgba(79,142,247,', C2='rgba(0,212,255,';
+  /* ---------- Content ----------
+     Edit this section to change what appears in "Selected work"
+     and in the repository list. */
 
-    particles.forEach((p,i)=>{
-      p.x+=p.vx; p.y+=p.vy;
-      if(p.x<0||p.x>W) p.vx*=-1;
-      if(p.y<0||p.y>H) p.vy*=-1;
+  var PROJECTS = [
+    {
+      repo: 'resume-evaluator',
+      title: 'Resume Evaluator',
+      kind: 'AI and data',
+      desc: 'Evaluates how well a resume matches a job description. Runs as a Streamlit web app.',
+      demo: 'https://resume-evaluator-gs.streamlit.app/',
+      stack: ['Python', 'Streamlit']
+    },
+    {
+      repo: 'OMR-Evaluation-System',
+      title: 'OMR Evaluation System',
+      kind: 'AI and data',
+      desc: 'Automates the evaluation of OMR answer sheets.'
+    },
+    {
+      repo: 'Task-Management',
+      title: 'Task Management',
+      kind: 'Web app',
+      desc: 'A task and project management application that runs in the browser.',
+      demo: 'https://gameover007coder.github.io/Task-Management/'
+    },
+    {
+      repo: 'E-COMMERCE',
+      title: 'E-Commerce',
+      kind: 'Web app',
+      desc: 'An e-commerce web project, hosted live on GitHub Pages.',
+      demo: 'https://gameover007coder.github.io/E-COMMERCE/'
+    },
+    {
+      repo: 'Person-Finder',
+      title: 'Person Finder',
+      kind: 'AI and data',
+      desc: 'A person-finding project.'
+    },
+    {
+      repo: 'Networking-Linux-Firewall',
+      title: 'Linux Firewall',
+      kind: 'Systems and networking',
+      desc: 'Linux networking and firewall work, part of my hands-on security fundamentals practice.'
+    },
+    {
+      repo: 'Online-Student-Registration-System',
+      title: 'Student Registration System',
+      kind: 'Web app',
+      desc: 'An online student registration project.'
+    },
+    {
+      repo: 'earning-ai',
+      title: 'Earning AI',
+      kind: 'AI and data',
+      desc: 'An AI-focused project concept exploring earning tools.'
+    }
+  ];
 
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=C1+p.alpha+')';
-      ctx.fill();
+  var REPO_GROUPS = {
+    'Web': ['E-COMMERCE', 'Task-Management', 'portfolio', 'Ujjawal-Singh', 'Ujjawal', 'Online-Student-Registration-System', 'Online-Student-Registration-System.github.io', 'evententery', 'gatepass', 'Maurax'],
+    'AI and data': ['OMR-Evaluation-System', 'OMR-Evaluation-System-2', 'resume-evaluator', 'Automated-Resume-Relevance-Check-System.2', 'Streamlit', 'ai', 'earning-ai', 'Person-Finder', 'blank-app'],
+    'Systems and networking': ['PBL_OS', 'OS_lab', 'Networking-Linux', 'Networking-Linux-Firewall'],
+    'Other': ['School', 'Abhinaw.github.io', 'Astha-Singh', 'Intership-project']
+  };
 
-      for(let j=i+1;j<N;j++){
-        const q=particles[j];
-        const dx=p.x-q.x, dy=p.y-q.y;
-        const d=Math.sqrt(dx*dx+dy*dy);
-        if(d<140){
-          ctx.beginPath();
-          ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y);
-          ctx.strokeStyle=C2+(1-d/140)*.15+')';
-          ctx.lineWidth=.6;
-          ctx.stroke();
-        }
+  /* ---------- Helpers ---------- */
+  function $(sel, root) { return (root || document).querySelector(sel); }
+  function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) {
+      if (k === 'class') node.className = attrs[k];
+      else if (k === 'text') node.textContent = attrs[k];
+      else node.setAttribute(k, attrs[k]);
+    });
+    (children || []).forEach(function (c) { if (c) node.appendChild(c); });
+    return node;
+  }
+
+  function repoUrl(name) { return 'https://github.com/' + GITHUB_USER + '/' + name; }
+
+  function formatDate(iso) {
+    try {
+      return new Intl.DateTimeFormat('en', { month: 'short', year: 'numeric' }).format(new Date(iso));
+    } catch (e) { return ''; }
+  }
+
+  var ARROW = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg>';
+  var PLUS = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
+
+  /* ---------- Theme ---------- */
+  (function theme() {
+    var root = document.documentElement;
+    var btn = $('#themeToggle');
+    var meta = $('meta[name="theme-color"]');
+
+    function apply(t) {
+      root.setAttribute('data-theme', t);
+      btn.setAttribute('aria-label', t === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+      if (meta) meta.setAttribute('content', t === 'dark' ? '#0b1222' : '#f2f4f8');
+    }
+    apply(root.getAttribute('data-theme') || 'light');
+
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      apply(next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+  })();
+
+  /* ---------- Header and mobile menu ---------- */
+  (function header() {
+    var bar = $('#siteHeader');
+    var nav = $('#nav');
+    var btn = $('#menuBtn');
+
+    function onScroll() { bar.classList.toggle('is-scrolled', window.scrollY > 8); }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    function setOpen(open) {
+      nav.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    }
+    btn.addEventListener('click', function () { setOpen(btn.getAttribute('aria-expanded') !== 'true'); });
+    $$('a', nav).forEach(function (a) { a.addEventListener('click', function () { setOpen(false); }); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+
+    // Highlight the section in view
+    var links = $$('.nav-list a');
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          links.forEach(function (a) { a.removeAttribute('aria-current'); });
+          var link = map[entry.target.id];
+          if (link) link.setAttribute('aria-current', 'true');
+        });
+      }, { rootMargin: '-45% 0px -50% 0px' });
+      Object.keys(map).forEach(function (id) {
+        var sec = document.getElementById(id);
+        if (sec) io.observe(sec);
+      });
+      var home = document.getElementById('home');
+      if (home) new IntersectionObserver(function (e) {
+        if (e[0].isIntersecting) links.forEach(function (a) { a.removeAttribute('aria-current'); });
+      }, { rootMargin: '-45% 0px -50% 0px' }).observe(home);
+    }
+  })();
+
+  /* ---------- Portrait fallback ---------- */
+  (function portrait() {
+    var img = $('#portraitImg');
+    var frame = $('#portraitFrame');
+    if (!img || !frame) return;
+    function fail() { frame.classList.add('no-img'); }
+    img.addEventListener('error', fail);
+    if (img.complete && img.naturalWidth === 0) fail();
+  })();
+
+  /* ---------- Generated project glyph (identicon from the repo name) ---------- */
+  function hash(str) {
+    var h = 2166136261;
+    for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  }
+  function rng(seed) {
+    return function () {
+      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function glyph(name) {
+    var rand = rng(hash(name));
+    var n = 6, cell = 16, half = n / 2, out = '';
+    for (var y = 0; y < n; y++) {
+      for (var x = 0; x < half; x++) {
+        var r = rand();
+        if (r < 0.42) continue;
+        var op = r > 0.8 ? 1 : 0.55;
+        out += '<rect x="' + (x * cell) + '" y="' + (y * cell) + '" width="' + cell + '" height="' + cell + '" rx="4" fill="currentColor" opacity="' + op + '"/>';
+        out += '<rect x="' + ((n - 1 - x) * cell) + '" y="' + (y * cell) + '" width="' + cell + '" height="' + cell + '" rx="4" fill="currentColor" opacity="' + op + '"/>';
       }
-      if(mouse.x){
-        const dx=p.x-mouse.x, dy=p.y-mouse.y;
-        const d=Math.sqrt(dx*dx+dy*dy);
-        if(d<150){
-          ctx.beginPath();
-          ctx.moveTo(p.x,p.y); ctx.lineTo(mouse.x,mouse.y);
-          ctx.strokeStyle=C1+(1-d/150)*.25+')';
-          ctx.lineWidth=.8;
-          ctx.stroke();
-        }
+    }
+    return '<svg viewBox="0 0 ' + (n * cell) + ' ' + (n * cell) + '" aria-hidden="true" focusable="false">' + out + '</svg>';
+  }
+
+  /* ---------- Project index ---------- */
+  var index = $('#projectIndex');
+  var rows = [];
+
+  function buildRow(p, i) {
+    var id = 'proj-' + i;
+    var li = el('li', { 'class': 'row' });
+
+    var stackText = (p.stack || []).join(', ');
+    var btn = el('button', { 'class': 'row-btn', type: 'button', id: id + '-btn', 'aria-expanded': 'false', 'aria-controls': id + '-panel' }, [
+      el('span', { 'class': 'row-title', text: p.title }),
+      el('span', { 'class': 'row-kind', text: p.kind }),
+      el('span', { 'class': 'row-stack', text: stackText }),
+      (function () { var s = el('span', { 'class': 'row-icon', 'aria-hidden': 'true' }); s.innerHTML = PLUS; return s; })()
+    ]);
+    var head = el('h3', { 'class': 'row-head' }, [btn]);
+
+    var g = el('div', { 'class': 'glyph' });
+    g.innerHTML = glyph(p.repo);
+
+    var tags = el('div', { 'class': 'tags' });
+    (p.stack || []).forEach(function (t) { tags.appendChild(el('span', { 'class': 'tag', text: t })); });
+
+    var links = el('div', { 'class': 'panel-links' });
+    if (p.demo) {
+      var demo = el('a', { 'class': 'text-link', href: p.demo, target: '_blank', rel: 'noopener' });
+      demo.innerHTML = 'Live demo' + ARROW;
+      links.appendChild(demo);
+    }
+    var repo = el('a', { 'class': 'text-link', href: repoUrl(p.repo), target: '_blank', rel: 'noopener' });
+    repo.innerHTML = 'Repository' + ARROW;
+    links.appendChild(repo);
+
+    var meta = el('p', { 'class': 'panel-meta' });
+
+    var body = el('div', {}, [el('p', { 'class': 'panel-desc', text: p.desc }), tags, links, meta]);
+    var inner = el('div', { 'class': 'row-panel-inner' }, [el('div', { 'class': 'panel-grid' }, [g, body])]);
+    var panel = el('div', { 'class': 'row-panel', id: id + '-panel', role: 'region', 'aria-labelledby': id + '-btn' }, [inner]);
+
+    li.appendChild(head);
+    li.appendChild(panel);
+
+    btn.addEventListener('click', function () { toggle(li, btn); });
+    rows.push({ p: p, li: li, btn: btn, tags: tags, meta: meta, stackEl: $('.row-stack', btn) });
+    return li;
+  }
+
+  function toggle(li, btn, force) {
+    var open = typeof force === 'boolean' ? force : !li.classList.contains('is-open');
+    li.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', String(open));
+  }
+
+  if (index) {
+    PROJECTS.forEach(function (p, i) { index.appendChild(buildRow(p, i)); });
+    if (rows[0]) toggle(rows[0].li, rows[0].btn, true);
+  }
+
+  /* ---------- Repository list ---------- */
+  var repoList = $('#repoList');
+  var filtersEl = $('#repoFilters');
+  var countEl = $('#reposCount');
+  var activeFilter = 'All';
+  var repoMeta = {}; // lowercase name -> GitHub API object
+  var extraRepos = []; // repos on GitHub that aren't in REPO_GROUPS
+
+  function allRepoEntries() {
+    var entries = [];
+    Object.keys(REPO_GROUPS).forEach(function (group) {
+      REPO_GROUPS[group].forEach(function (name) { entries.push({ name: name, group: group }); });
+    });
+    extraRepos.forEach(function (name) { entries.push({ name: name, group: 'Other' }); });
+    return entries;
+  }
+
+  function renderRepos() {
+    if (!repoList) return;
+    var entries = allRepoEntries();
+    var visible = entries.filter(function (e) { return activeFilter === 'All' || e.group === activeFilter; });
+
+    repoList.innerHTML = '';
+    visible.forEach(function (e) {
+      var m = repoMeta[e.name.toLowerCase()];
+      var a = el('a', { 'class': 'repo', href: repoUrl(e.name), target: '_blank', rel: 'noopener' }, [
+        el('span', { 'class': 'repo-name', text: e.name }),
+        el('span', { 'class': 'repo-lang', text: m && m.language ? m.language : '' })
+      ]);
+      repoList.appendChild(el('li', {}, [a]));
+    });
+    if (countEl) countEl.textContent = '(' + visible.length + ')';
+  }
+
+  function renderFilters() {
+    if (!filtersEl) return;
+    filtersEl.innerHTML = '';
+    ['All'].concat(Object.keys(REPO_GROUPS)).forEach(function (name) {
+      var b = el('button', { 'class': 'filter', type: 'button', 'aria-pressed': String(name === activeFilter), text: name });
+      b.addEventListener('click', function () {
+        activeFilter = name;
+        $$('.filter', filtersEl).forEach(function (f) { f.setAttribute('aria-pressed', String(f === b)); });
+        renderRepos();
+      });
+      filtersEl.appendChild(b);
+    });
+  }
+
+  renderFilters();
+  renderRepos();
+
+  /* ---------- Live data from GitHub (optional enhancement) ---------- */
+  function enrichFromGitHub() {
+    if (!window.fetch) return;
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 7000);
+
+    fetch('https://api.github.com/users/' + GITHUB_USER + '/repos?per_page=100&sort=updated', {
+      headers: { Accept: 'application/vnd.github+json' },
+      signal: ctrl ? ctrl.signal : undefined
+    })
+      .then(function (res) { clearTimeout(timer); return res.ok ? res.json() : Promise.reject(); })
+      .then(function (data) {
+        if (!Array.isArray(data)) return;
+        var known = {};
+        allRepoEntries().forEach(function (e) { known[e.name.toLowerCase()] = true; });
+
+        data.forEach(function (r) {
+          repoMeta[r.name.toLowerCase()] = r;
+          if (!known[r.name.toLowerCase()] && !r.fork) extraRepos.push(r.name);
+        });
+
+        rows.forEach(function (row) {
+          var m = repoMeta[row.p.repo.toLowerCase()];
+          if (!m) return;
+          if (m.language && !(row.p.stack && row.p.stack.length)) {
+            row.stackEl.textContent = m.language;
+            row.tags.appendChild(el('span', { 'class': 'tag', text: m.language }));
+          }
+          var parts = [];
+          if (m.pushed_at) parts.push('Last updated ' + formatDate(m.pushed_at));
+          if (m.stargazers_count) parts.push(m.stargazers_count + (m.stargazers_count === 1 ? ' star' : ' stars'));
+          row.meta.textContent = parts.join('. ');
+        });
+
+        renderRepos();
+      })
+      .catch(function () { /* offline or rate-limited: the static content is already complete */ });
+  }
+  enrichFromGitHub();
+
+  /* ---------- Copy email ---------- */
+  (function copyEmail() {
+    var btn = $('#copyEmail');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      function done() {
+        btn.textContent = 'Copied';
+        setTimeout(function () { btn.textContent = 'Copy email'; }, 1800);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(CONTACT_EMAIL).then(done, function () { window.location.href = 'mailto:' + CONTACT_EMAIL; });
+      } else {
+        window.location.href = 'mailto:' + CONTACT_EMAIL;
       }
     });
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
+  })();
 
-// ─── TYPEWRITER ────────────────────────────────────────
-(function(){
-  const el = document.getElementById('typewriter');
-  const phrases = [
-    'Computer Science Student',
-    'Software Developer',
-    'Problem Solver',
-    'Full-Stack Developer',
-    'AI & Web Enthusiast',
-  ];
-  let pi=0, ci=0, deleting=false;
-  function tick(){
-    const phrase=phrases[pi];
-    if(!deleting){ ci++; } else { ci--; }
-    el.innerHTML=phrase.slice(0,ci)+'<span class="cursor"></span>';
-    if(!deleting && ci===phrase.length){ setTimeout(()=>{ deleting=true; tick(); },1800); return; }
-    if(deleting && ci===0){ deleting=false; pi=(pi+1)%phrases.length; setTimeout(tick,400); return; }
-    setTimeout(tick, deleting?50:80);
-  }
-  tick();
-})();
+  /* ---------- Contact form ---------- */
+  (function contactForm() {
+    var form = $('#contactForm');
+    if (!form) return;
+    var btn = $('#submitBtn');
+    var status = $('#formStatus');
 
-// ─── HEADER SCROLL ─────────────────────────────────────
-const header = document.getElementById('header');
-window.addEventListener('scroll',()=>{
-  header.classList.toggle('scrolled', window.scrollY>50);
-  document.getElementById('scrollTop').classList.toggle('show', window.scrollY>400);
-});
-
-// ─── HAMBURGER ─────────────────────────────────────────
-document.getElementById('hamburger').addEventListener('click',function(){
-  document.getElementById('navLinks').classList.toggle('open');
-  this.querySelector('i').className = document.getElementById('navLinks').classList.contains('open')
-    ? 'fas fa-times' : 'fas fa-bars';
-});
-
-// ─── NAV SMOOTH + ACTIVE ───────────────────────────────
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click',e=>{
-    e.preventDefault();
-    const t=document.querySelector(a.getAttribute('href'));
-    if(t) window.scrollTo({top:t.offsetTop-72,behavior:'smooth'});
-    document.getElementById('navLinks').classList.remove('open');
-    document.getElementById('hamburger').querySelector('i').className='fas fa-bars';
-  });
-});
-const sections=document.querySelectorAll('section[id]');
-window.addEventListener('scroll',()=>{
-  let cur='';
-  sections.forEach(s=>{ if(window.scrollY>=s.offsetTop-100) cur=s.id; });
-  document.querySelectorAll('.nav-links a').forEach(a=>{
-    a.classList.toggle('active', a.getAttribute('href')==='#'+cur);
-  });
-});
-
-// ─── SCROLL-TOP ────────────────────────────────────────
-document.getElementById('scrollTop').addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
-
-// ─── REVEAL ON SCROLL ──────────────────────────────────
-const ro=new IntersectionObserver((entries)=>{
-  entries.forEach((e,i)=>{
-    if(e.isIntersecting){
-      setTimeout(()=>e.target.classList.add('visible'), i*80);
-      e.target.querySelectorAll('.skill-bar-fill').forEach(b=>{
-        b.style.width=b.dataset.w+'%';
-      });
+    function say(type, text) {
+      status.className = 'form-status ' + (type ? 'is-' + type : '');
+      status.textContent = text;
     }
-  });
-},{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
 
-// ─── SKILL TABS ────────────────────────────────────────
-document.querySelectorAll('.tab-btn').forEach(btn=>{
-  btn.addEventListener('click',function(){
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    this.classList.add('active');
-    const id=this.dataset.tab;
-    document.getElementById('tab-tech').style.display=id==='tech'?'grid':'none';
-    document.getElementById('tab-soft').style.display=id==='soft'?'grid':'none';
-    setTimeout(()=>{
-      document.querySelectorAll('#tab-'+id+' .skill-bar-fill').forEach(b=>{
-        b.style.width=b.dataset.w+'%';
-      });
-    },50);
-  });
-});
+    if (window.emailjs) window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+    else window.addEventListener('load', function () { if (window.emailjs) window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); });
 
-// ─── EMAILJS CONFIGURATION ─────────────────────────────
-// IMPORTANT: Replace these keys with your own from EmailJS
-const EMAILJS_PUBLIC_KEY  = 'ZkusTjuMM-TjTuvP6';
-const EMAILJS_SERVICE_ID  = 'service_vg7pcu3';
-const EMAILJS_TEMPLATE_ID = 'template_i5ml5oj';
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
 
-emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+      if (form.company && form.company.value) return; // honeypot
 
-// ─── TOAST SYSTEM ──────────────────────────────────────
-function showToast(type, title, message, duration=5000){
-  const icons = {
-    success:'<i class="fas fa-check"></i>',
-    error:'<i class="fas fa-exclamation-triangle"></i>',
-    loading:'<div class="spinner"></div>'
-  };
-  const toast=document.createElement('div');
-  toast.className=`toast toast-${type}`;
-  toast.innerHTML=`
-    <div class="toast-icon">${icons[type]}</div>
-    <div class="toast-body"><h4>${title}</h4><p>${message}</p></div>
-    ${type!=='loading'?'<button class="toast-close" onclick="removeToast(this.closest(\'.toast\'))"><i class="fas fa-times"></i></button>':''}
-  `;
-  document.getElementById('toastContainer').appendChild(toast);
-  requestAnimationFrame(()=>{ requestAnimationFrame(()=>toast.classList.add('show')); });
-  if(duration && type!=='loading') setTimeout(()=>removeToast(toast), duration);
-  return toast;
-}
-window.removeToast = function(toast){
-  if(!toast) return;
-  toast.classList.replace('show','hide');
-  setTimeout(()=>toast.remove(), 450);
-};
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        say('error', 'Fill in every field with a valid email address, then send again.');
+        return;
+      }
 
-// ─── CONTACT FORM SUBMIT ───────────────────────────────
-document.getElementById('contactForm').addEventListener('submit', async function(e){
-  e.preventDefault();
-  const btn = document.getElementById('submitBtn');
-  const form = this;
+      $('#replyTo').value = form.from_email.value;
 
-  document.getElementById('reply_to_field').value = document.getElementById('email').value;
+      if (!window.emailjs) {
+        say('error', 'The form service did not load. Email me directly at ' + CONTACT_EMAIL + '.');
+        return;
+      }
 
-  // Check if EmailJS keys are still placeholders
-  if(EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY' || EMAILJS_SERVICE_ID === 'service_abc123'){
-    showToast('error','Setup Required',
-      'Please add your EmailJS keys to script.js. See the setup guide below.',6000);
-    document.getElementById('setup-banner').style.display='flex';
-    return;
-  }
+      btn.disabled = true;
+      btn.textContent = 'Sending';
+      say('', 'Sending your message.');
 
-  btn.classList.add('btn-sending');
-  btn.innerHTML='<div class="spinner" style="width:16px;height:16px;border-width:2px;margin-right:6px;display:inline-block;"></div> Sending…';
-  const loadingToast = showToast('loading','Sending your message…','Please wait a moment.');
+      window.emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form)
+        .then(function () {
+          say('ok', 'Message sent. I will reply to ' + form.from_email.value + ' soon.');
+          form.reset();
+        })
+        .catch(function () {
+          say('error', 'The message did not send. Email me directly at ' + CONTACT_EMAIL + '.');
+        })
+        .then(function () {
+          btn.disabled = false;
+          btn.textContent = 'Send message';
+        });
+    });
+  })();
 
-  try {
-    await emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form);
-    window.removeToast(loadingToast);
-    showToast('success','Message Sent! 🎉',
-      `Thanks for reaching out! Ujjawal will reply to ${document.getElementById('email').value} soon.`,7000);
-    btn.innerHTML='<i class="fas fa-check"></i> Message Sent!';
-    btn.style.background='linear-gradient(135deg,#22c55e,#16a34a)';
-    form.reset();
-    setTimeout(()=>{
-      btn.innerHTML='<i class="fas fa-paper-plane"></i> Send Message';
-      btn.style.background='';
-      btn.classList.remove('btn-sending');
-    },4000);
-  } catch(err){
-    window.removeToast(loadingToast);
-    showToast('error','Failed to Send',
-      'Something went wrong. Please email directly at ujjusingh099@gmail.com',8000);
-    btn.innerHTML='<i class="fas fa-paper-plane"></i> Send Message';
-    btn.classList.remove('btn-sending');
-    console.error('EmailJS error:',err);
-  }
-});
+  /* ---------- Footer year ---------- */
+  var year = $('#year');
+  if (year) year.textContent = String(new Date().getFullYear());
+})();
