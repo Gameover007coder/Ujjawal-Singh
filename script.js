@@ -67,7 +67,8 @@
     'Computer Science Student',
     'Software Developer',
     'Problem Solver',
-    'Full-Stack Enthusiast',
+    'Full-Stack Developer',
+    'AI & Web Enthusiast',
   ];
   let pi=0, ci=0, deleting=false;
   function tick(){
